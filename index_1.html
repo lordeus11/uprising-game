@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UPRISING — Şehrin Efendisi Ol</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #0b0b10;
+  color: #f0ede8;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== VARIABLES ===== */
+:root {
+  --bg:       #0b0b10;
+  --bg2:      #13131c;
+  --bg3:      #1c1c28;
+  --card:     #17171f;
+  --border:   rgba(255,255,255,0.07);
+  --border2:  rgba(255,255,255,0.14);
+  --accent:   #e8b84b;
+  --accent2:  #f5d080;
+  --text:     #f0ede8;
+  --muted:    #7a7889;
+  --gold:     #e8b84b;
+  --xp:       #4caf6e;
+  --energy:   #e8624b;
+  --info:     #5b8dee;
+  --danger:   #e05252;
+  --success:  #4caf6e;
+  --radius:   14px;
+  --radius-sm: 8px;
+}
+
+/* ===== UTILITIES ===== */
+.hidden { display: none !important; }
+.screen { min-height: 100vh; }
+
+/* ===== AUTH SCREEN ===== */
+#auth-screen {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1.5rem;
+}
+
+.auth-bg {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 30%, rgba(232,184,75,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 70%, rgba(91,141,238,0.07) 0%, transparent 70%),
+    #0b0b10;
+  z-index: 0;
+}
+
+.auth-center {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-logo {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 3.5rem;
+  color: var(--accent);
+  letter-spacing: 3px;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+.auth-tagline {
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+.auth-card {
+  background: var(--card);
+  border: 0.5px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 2rem;
+  text-align: left;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 9px;
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border2);
+  background: transparent;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.auth-tab.active {
+  background: var(--accent);
+  color: #0b0b10;
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+.auth-form { display: flex; flex-direction: column; gap: 0; }
+
+.field { margin-bottom: 1rem; }
+
+.field label {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.field input {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--bg2);
+  border: 0.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.field input:focus { border-color: var(--accent); }
+
+.btn-main {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent);
+  color: #0b0b10;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: opacity 0.2s, transform 0.1s;
+  margin-top: 0.25rem;
+}
+.btn-main:hover { opacity: 0.88; }
+.btn-main:active { transform: scale(0.98); }
+
+.auth-error {
+  color: var(--danger);
+  font-size: 0.82rem;
+  text-align: center;
+  margin-top: 0.75rem;
+  padding: 8px;
+  background: rgba(224,82,82,0.1);
+  border-radius: var(--radius-sm);
+  border: 0.5px solid rgba(224,82,82,0.3);
+}
+
+/* ===== GAME SCREEN ===== */
+#game-screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+#game-screen.hidden { display: none !important; }
+
+/* TOPBAR */
+.topbar {
+  background: var(--card);
+  border-bottom: 0.5px solid var(--border);
+  padding: 0.65rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-logo {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 1.3rem;
+  color: var(--accent);
+  letter-spacing: 2px;
+  flex-shrink: 0;
+}
+
+.topbar-stats {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.stat-pill.gold { color: var(--gold); border-color: rgba(232,184,75,0.25); }
+.stat-pill.energy { color: var(--energy); border-color: rgba(232,98,75,0.25); }
+.stat-pill.level { color: var(--info); border-color: rgba(91,141,238,0.25); }
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.avatar-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: #0b0b10;
+  cursor: pointer;
+}
+
+.btn-logout {
+  background: transparent;
+  border: 0.5px solid var(--border2);
+  color: var(--muted);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+/* NAV TABS */
+.game-nav {
+  background: var(--bg2);
+  border-bottom: 0.5px solid var(--border);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.game-nav::-webkit-scrollbar { display: none; }
+
+.nav-tab {
+  flex-shrink: 0;
+  padding: 12px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.nav-tab:hover { color: var(--text); }
+.nav-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 700;
+}
+
+/* MAIN CONTENT */
+.game-main {
+  flex: 1;
+  padding: 1rem;
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* SECTION TITLE */
+.section-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--muted);
+  margin: 1.25rem 0 0.75rem;
+  padding-left: 10px;
+  border-left: 3px solid var(--accent);
+  font-weight: 600;
+}
+
+/* WELCOME BANNER */
+.welcome-banner {
+  background: linear-gradient(135deg, var(--bg3) 0%, var(--card) 100%);
+  border: 0.5px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.welcome-banner h2 { font-size: 1.2rem; font-weight: 700; }
+.welcome-banner p { color: var(--muted); font-size: 0.82rem; margin-top: 3px; }
+.welcome-level {
+  text-align: center;
+  background: var(--accent);
+  color: #0b0b10;
+  border-radius: 10px;
+  padding: 8px 14px;
+  flex-shrink: 0;
+}
+.welcome-level span { display: block; font-family: 'Bebas Neue', cursive; font-size: 2rem; line-height: 1; }
+.welcome-level small { font-size: 0.6rem; font-weight: 700; letter-spacing: 2px; }
+
+/* DASH GRID */
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.dash-card {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+.dash-card:hover { border-color: var(--border2); }
+
+.dash-icon { font-size: 1.5rem; margin-bottom: 6px; }
+.dash-val { font-family: 'Bebas Neue', cursive; font-size: 1.8rem; line-height: 1; }
+.dash-lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
+.energy-regen { font-size: 0.68rem; color: var(--energy); margin-top: 4px; }
+
+.gold-card .dash-val { color: var(--gold); }
+.energy-card .dash-val { color: var(--energy); }
+.xp-card .dash-val { color: var(--xp); }
+.quest-card-mini .dash-val { color: var(--info); }
+
+/* QUICK QUESTS */
+.quick-quests {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* QUEST LIST */
+.quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quest-card {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: border-color 0.2s, opacity 0.2s;
+}
+.quest-card:hover { border-color: var(--border2); }
+.quest-card.on-cooldown { opacity: 0.5; }
+.quest-card.no-energy { opacity: 0.6; }
+
+.quest-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  background: var(--bg3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.quest-info { flex: 1; min-width: 0; }
+.quest-name { font-weight: 700; font-size: 0.9rem; }
+.quest-desc { font-size: 0.76rem; color: var(--muted); margin-top: 2px; }
+
+.quest-rewards {
+  display: flex;
+  gap: 5px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  font-size: 0.68rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+.badge-gold { background: rgba(232,184,75,0.15); color: var(--gold); }
+.badge-xp   { background: rgba(76,175,110,0.15); color: var(--xp); }
+.badge-en   { background: rgba(232,98,75,0.15);  color: var(--energy); }
+
+.btn-quest {
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border: none;
+  background: var(--accent);
+  color: #0b0b10;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.btn-quest:hover:not(:disabled) { opacity: 0.85; }
+.btn-quest:active:not(:disabled) { transform: scale(0.97); }
+.btn-quest:disabled {
+  background: var(--bg3);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+/* PROFILE */
+.profile-hero {
+  background: var(--card);
+  border: 0.5px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.avatar-lg {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: #0b0b10;
+  flex-shrink: 0;
+  border: 3px solid var(--bg3);
+}
+
+.profile-info { flex: 1; min-width: 0; }
+.profile-name { font-weight: 700; font-size: 1.15rem; }
+.profile-title { color: var(--accent); font-size: 0.8rem; font-weight: 600; margin-top: 2px; }
+
+.xp-bar-wrap { margin-top: 10px; }
+.xp-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.xp-bar {
+  height: 7px;
+  background: var(--bg3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.xp-fill {
+  height: 100%;
+  background: var(--xp);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.stats-full {
+  margin-top: 1rem;
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1.1rem;
+  font-size: 0.88rem;
+  border-bottom: 0.5px solid var(--border);
+}
+.stat-row:last-child { border-bottom: none; }
+.stat-row span { color: var(--muted); }
+.stat-row strong { font-weight: 700; color: var(--text); }
+
+/* SHOP */
+.shop-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.shop-card {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.2s;
+}
+.shop-card:hover { border-color: var(--border2); }
+.shop-card.owned { opacity: 0.5; }
+
+.shop-icon { font-size: 2rem; }
+.shop-name { font-weight: 700; font-size: 0.9rem; }
+.shop-desc { font-size: 0.75rem; color: var(--muted); }
+.shop-price { color: var(--gold); font-weight: 700; font-size: 0.85rem; margin-top: 2px; }
+
+.btn-buy {
+  padding: 7px;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border: none;
+  background: var(--accent);
+  color: #0b0b10;
+  transition: opacity 0.2s;
+  margin-top: 4px;
+}
+.btn-buy:hover:not(:disabled) { opacity: 0.85; }
+.btn-buy:disabled { background: var(--bg3); color: var(--muted); cursor: not-allowed; }
+
+.owned-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0.75rem 0;
+}
+
+.owned-badge {
+  background: var(--bg3);
+  border: 0.5px solid var(--border2);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* OVERLAY */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.overlay-box {
+  background: var(--card);
+  border: 2px solid var(--accent);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  max-width: 300px;
+  width: 100%;
+}
+
+.overlay-emoji { font-size: 3.5rem; margin-bottom: 0.5rem; }
+.overlay-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 2rem;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+.overlay-sub { color: var(--muted); font-size: 0.85rem; margin: 8px 0 1.5rem; }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  background: var(--card);
+  border: 0.5px solid var(--accent);
+  color: var(--text);
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 999;
+  white-space: nowrap;
+  animation: toastIn 0.3s ease;
+  pointer-events: none;
+}
+.toast.hidden { display: none !important; }
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 480px) {
+  .topbar-logo { font-size: 1.1rem; }
+  .stat-pill { font-size: 0.72rem; padding: 3px 8px; }
+  .game-main { padding: 0.75rem; }
+  .dash-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .quest-card { flex-wrap: wrap; }
+  .shop-list { grid-template-columns: 1fr 1fr; }
+  .profile-hero { flex-direction: column; text-align: center; }
+}
+
+  </style>
+</head>
+<body>
+
+  <div id="auth-screen" class="screen active">
+    <div class="auth-bg"></div>
+    <div class="auth-center">
+      <div class="auth-logo">⚡ UPRISING</div>
+      <p class="auth-tagline">Şehrin efendisi ol</p>
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">Giriş Yap</button>
+          <button class="auth-tab" data-tab="register">Kayıt Ol</button>
+        </div>
+        <div id="login-form" class="auth-form">
+          <div class="field"><label>Kullanıcı Adı</label><input id="login-user" type="text" placeholder="oyuncu_adi" /></div>
+          <div class="field"><label>Şifre</label><input id="login-pass" type="password" placeholder="••••••" /></div>
+          <button class="btn-main" id="btn-login">Giriş Yap</button>
+        </div>
+        <div id="register-form" class="auth-form hidden">
+          <div class="field"><label>Kullanıcı Adı</label><input id="reg-user" type="text" placeholder="efsane_isim" /></div>
+          <div class="field"><label>Şifre</label><input id="reg-pass" type="password" placeholder="••••••" /></div>
+          <button class="btn-main" id="btn-register">Hesap Oluştur</button>
+        </div>
+        <p class="auth-error hidden" id="auth-error"></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="game-screen" class="screen hidden">
+    <header class="topbar">
+      <div class="topbar-logo">⚡ UPRISING</div>
+      <div class="topbar-stats">
+        <div class="stat-pill gold"><span id="bar-gold">0</span> 💰</div>
+        <div class="stat-pill energy"><span id="bar-energy">10</span> ⚡</div>
+        <div class="stat-pill level">Sv <span id="bar-level">1</span></div>
+      </div>
+      <div class="topbar-right">
+        <div class="avatar-sm" id="topbar-avatar">?</div>
+        <button class="btn-logout" id="btn-logout">Çıkış</button>
+      </div>
+    </header>
+    <nav class="game-nav">
+      <button class="nav-tab active" data-panel="panel-dashboard">🏠 Ana</button>
+      <button class="nav-tab" data-panel="panel-quests">📋 Görevler</button>
+      <button class="nav-tab" data-panel="panel-profile">👤 Profil</button>
+      <button class="nav-tab" data-panel="panel-shop">🛒 Dükkan</button>
+    </nav>
+    <main class="game-main">
+      <section id="panel-dashboard" class="panel" style="display:block">
+        <div class="welcome-banner">
+          <div><h2 id="welcome-name">Hoş geldin!</h2><p id="welcome-sub">Bugün ne yapacaksın?</p></div>
+          <div class="welcome-level"><span id="welcome-lvl">1</span><small>SEVİYE</small></div>
+        </div>
+        <div class="dash-grid">
+          <div class="dash-card gold-card"><div class="dash-icon">💰</div><div class="dash-val" id="dash-gold">0</div><div class="dash-lbl">Altın</div></div>
+          <div class="dash-card energy-card"><div class="dash-icon">⚡</div><div class="dash-val" id="dash-energy">10/10</div><div class="dash-lbl">Enerji</div><div class="energy-regen" id="energy-regen">Dolu</div></div>
+          <div class="dash-card xp-card"><div class="dash-icon">🏆</div><div class="dash-val" id="dash-xp">0</div><div class="dash-lbl">Toplam XP</div></div>
+          <div class="dash-card quest-card-mini"><div class="dash-icon">📋</div><div class="dash-val" id="dash-quests">0</div><div class="dash-lbl">Görev Tamamlandı</div></div>
+        </div>
+        <div class="section-title">Hızlı Görevler</div>
+        <div id="quick-quests" class="quick-quests"></div>
+      </section>
+      <section id="panel-quests" class="panel" style="display:none">
+        <div class="section-title">Tüm Görevler</div>
+        <div id="quest-list" class="quest-list"></div>
+      </section>
+      <section id="panel-profile" class="panel" style="display:none">
+        <div class="profile-hero">
+          <div class="avatar-lg" id="profile-avatar">?</div>
+          <div class="profile-info">
+            <div class="profile-name" id="profile-name">—</div>
+            <div class="profile-title" id="profile-title">Çaylak</div>
+            <div class="xp-bar-wrap">
+              <div class="xp-label"><span>XP</span><span id="xp-text">0 / 100</span></div>
+              <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="stats-full">
+          <div class="stat-row"><span>🏅 Seviye</span><strong id="stat-level">1</strong></div>
+          <div class="stat-row"><span>💰 Toplam Kazanılan</span><strong id="stat-gold-total">0</strong></div>
+          <div class="stat-row"><span>⚡ Enerji</span><strong id="stat-energy">10/10</strong></div>
+          <div class="stat-row"><span>📋 Tamamlanan Görev</span><strong id="stat-quests-done">0</strong></div>
+          <div class="stat-row"><span>🏆 Toplam XP</span><strong id="stat-total-xp">0</strong></div>
+          <div class="stat-row"><span>🎖 Unvan</span><strong id="stat-title">Çaylak</strong></div>
+        </div>
+      </section>
+      <section id="panel-shop" class="panel" style="display:none">
+        <div class="section-title">Dükkan</div>
+        <div id="shop-list" class="shop-list"></div>
+        <div class="section-title" style="margin-top:1.5rem">Sahip Olduklarım</div>
+        <div id="owned-list" class="owned-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="overlay hidden" id="levelup-overlay">
+    <div class="overlay-box">
+      <div class="overlay-emoji">🏆</div>
+      <h2 class="overlay-title" id="lu-title">SEVİYE ATLADIN!</h2>
+      <p class="overlay-sub" id="lu-sub">Tebrikler!</p>
+      <button class="btn-main" id="btn-close-lu">Devam Et</button>
+    </div>
+  </div>
+  <div class="toast hidden" id="toast"></div>
+
+  <script>
+
+// === data.js ===
+// js/data.js — Oyun verileri
+
+const QUESTS = [
+  {
+    id: 'patrol',
+    name: 'Sokak Devriyesi',
+    desc: 'Mahalleyi dolaş, düzeni sağla.',
+    icon: '🚶',
+    gold: 50,
+    xp: 30,
+    energy: 2,
+    cooldown: 60
+  },
+  {
+    id: 'meeting',
+    name: 'İş Görüşmesi',
+    desc: 'Yeni bağlantılar kur, fırsatları yakala.',
+    icon: '💼',
+    gold: 80,
+    xp: 45,
+    energy: 3,
+    cooldown: 120
+  },
+  {
+    id: 'gym',
+    name: 'Antrenman',
+    desc: 'Jimdaki özel seansını tamamla.',
+    icon: '🥊',
+    gold: 30,
+    xp: 60,
+    energy: 4,
+    cooldown: 90
+  },
+  {
+    id: 'market',
+    name: 'Piyasa Araştırması',
+    desc: 'Şehrin fiyatlarını incele, bilgi topla.',
+    icon: '📊',
+    gold: 120,
+    xp: 50,
+    energy: 3,
+    cooldown: 180
+  },
+  {
+    id: 'delivery',
+    name: 'Hızlı Teslimat',
+    desc: 'Paketi zamanında yetiştir.',
+    icon: '🏍️',
+    gold: 65,
+    xp: 35,
+    energy: 2,
+    cooldown: 60
+  },
+  {
+    id: 'hacking',
+    name: 'Veri Toplama',
+    desc: 'Şehrin dijital izlerini takip et.',
+    icon: '💻',
+    gold: 100,
+    xp: 70,
+    energy: 5,
+    cooldown: 240
+  },
+  {
+    id: 'contact',
+    name: 'Bilgi Kaynağı',
+    desc: 'Gizli bir bağlantıyla buluş.',
+    icon: '🤝',
+    gold: 90,
+    xp: 55,
+    energy: 3,
+    cooldown: 150
+  }
+];
+
+const SHOP_ITEMS = [
+  {
+    id: 'diamond',
+    name: 'Elmas',
+    desc: 'Nadir bulunan değerli taş. Prestijini zirveye taşır.',
+    icon: '💎',
+    price: 2000,
+    effect: { bonusXp: 0.2 },
+    consumable: false
+  },
+  {
+    id: 'coffee',
+    name: 'Çift Espresso',
+    desc: '+3 enerji anında yükler.',
+    icon: '☕',
+    price: 80,
+    effect: { energy: 3 },
+    consumable: true
+  },
+  {
+    id: 'jacket',
+    name: 'Deri Ceket',
+    desc: 'Sokak prestijini artırır.',
+    icon: '🧥',
+    price: 300,
+    effect: {},
+    consumable: false
+  },
+  {
+    id: 'phone',
+    name: 'Akıllı Telefon',
+    desc: 'Görev ödüllerini %10 artırır.',
+    icon: '📱',
+    price: 500,
+    effect: { bonusGold: 0.1 },
+    consumable: false
+  },
+  {
+    id: 'bike',
+    name: 'Motosiklet',
+    desc: 'Teslimat cooldown süresini yarıya indirir.',
+    icon: '🏍️',
+    price: 800,
+    effect: { reduceCooldown: 0.5 },
+    consumable: false
+  },
+  {
+    id: 'energy_drink',
+    name: 'Enerji İçeceği',
+    desc: '+5 enerji anında yükler.',
+    icon: '⚡',
+    price: 150,
+    effect: { energy: 5 },
+    consumable: true
+  },
+  {
+    id: 'office',
+    name: 'Özel Ofis',
+    desc: 'Her saat başı +20 altın kazandırır.',
+    icon: '🏢',
+    price: 1200,
+    effect: { passiveGold: 20 },
+    consumable: false
+  }
+];
+
+const TITLES = [
+  { level: 1,  title: 'Çaylak' },
+  { level: 3,  title: 'Acemi' },
+  { level: 5,  title: 'Stajyer' },
+  { level: 8,  title: 'Uzman' },
+  { level: 12, title: 'Usta' },
+  { level: 17, title: 'Efsane' },
+  { level: 25, title: 'Patron' }
+];
+
+const MAX_ENERGY = 10;
+const ENERGY_REGEN_SEC = 30;
+
+function getTitle(level) {
+  let t = TITLES[0].title;
+  for (const entry of TITLES) {
+    if (level >= entry.level) t = entry.title;
+  }
+  return t;
+}
+
+function xpForLevel(level) {
+  return Math.floor(100 * Math.pow(1.25, level - 1));
+}
+
+// === storage.js ===
+// js/storage.js — localStorage yönetimi
+
+const Storage = {
+  USERS_KEY: 'uprising_users',
+  SESSION_KEY: 'uprising_session',
+
+  getUsers() {
+    try { return JSON.parse(localStorage.getItem(this.USERS_KEY) || '{}'); }
+    catch { return {}; }
+  },
+
+  saveUsers(users) {
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+  },
+
+  getSession() {
+    try { return JSON.parse(localStorage.getItem(this.SESSION_KEY) || 'null'); }
+    catch { return null; }
+  },
+
+  saveSession(username) {
+    localStorage.setItem(this.SESSION_KEY, JSON.stringify(username));
+  },
+
+  clearSession() {
+    localStorage.removeItem(this.SESSION_KEY);
+  },
+
+  getPlayer(username) {
+    const users = this.getUsers();
+    return users[username] || null;
+  },
+
+  savePlayer(username, data) {
+    const users = this.getUsers();
+    users[username] = data;
+    this.saveUsers(users);
+  },
+
+  register(username, password) {
+    const users = this.getUsers();
+    if (users[username]) return { ok: false, error: 'Bu kullanıcı adı zaten alınmış.' };
+    if (username.length < 3) return { ok: false, error: 'Kullanıcı adı en az 3 karakter olmalı.' };
+    if (password.length < 4) return { ok: false, error: 'Şifre en az 4 karakter olmalı.' };
+
+    users[username] = {
+      password,
+      gold: 0,
+      xp: 0,
+      level: 1,
+      totalXp: 0,
+      totalGold: 0,
+      energy: MAX_ENERGY,
+      lastEnergyTime: Date.now(),
+      questCooldowns: {},
+      questsDone: 0,
+      inventory: []
+    };
+    this.saveUsers(users);
+    return { ok: true };
+  },
+
+  login(username, password) {
+    const users = this.getUsers();
+    if (!users[username]) return { ok: false, error: 'Böyle bir hesap bulunamadı.' };
+    if (users[username].password !== password) return { ok: false, error: 'Şifre yanlış.' };
+    return { ok: true };
+  }
+};
+
+// === game.js ===
+// js/game.js — Oyun mantığı
+
+const Game = {
+  username: null,
+  player: null,
+  energyInterval: null,
+  passiveInterval: null,
+
+  load(username) {
+    this.username = username;
+    this.player = Storage.getPlayer(username);
+    this.regenerateEnergy();
+    this.startEnergyRegen();
+    this.startPassiveIncome();
+  },
+
+  save() {
+    Storage.savePlayer(this.username, this.player);
+  },
+
+  regenerateEnergy() {
+    const p = this.player;
+    const now = Date.now();
+    const elapsed = Math.floor((now - (p.lastEnergyTime || now)) / 1000);
+    const gained = Math.floor(elapsed / ENERGY_REGEN_SEC);
+    if (gained > 0) {
+      p.energy = Math.min(MAX_ENERGY, p.energy + gained);
+      p.lastEnergyTime = now - ((elapsed % ENERGY_REGEN_SEC) * 1000);
+    }
+  },
+
+  startEnergyRegen() {
+    clearInterval(this.energyInterval);
+    this.energyInterval = setInterval(() => {
+      const p = this.player;
+      if (p.energy < MAX_ENERGY) {
+        const now = Date.now();
+        const elapsed = Math.floor((now - p.lastEnergyTime) / 1000);
+        if (elapsed >= ENERGY_REGEN_SEC) {
+          p.energy = Math.min(MAX_ENERGY, p.energy + 1);
+          p.lastEnergyTime = now;
+          this.save();
+          UI.renderStats();
+          UI.renderQuests();
+          UI.renderDashboard();
+        }
+        const secLeft = ENERGY_REGEN_SEC - (elapsed % ENERGY_REGEN_SEC);
+        const el = document.getElementById('energy-regen');
+        if (el) el.textContent = '+1 enerji → ' + secLeft + 's';
+      } else {
+        const el = document.getElementById('energy-regen');
+        if (el) el.textContent = 'Dolu ✓';
+      }
+    }, 1000);
+  },
+
+  startPassiveIncome() {
+    clearInterval(this.passiveInterval);
+    this.passiveInterval = setInterval(() => {
+      const p = this.player;
+      if (p.inventory && p.inventory.includes('office')) {
+        p.gold += 20;
+        p.totalGold += 20;
+        this.save();
+        UI.renderStats();
+        UI.renderDashboard();
+        UI.showToast('+20 💰 Ofis geliri!');
+      }
+    }, 60000);
+  },
+
+  stopIntervals() {
+    clearInterval(this.energyInterval);
+    clearInterval(this.passiveInterval);
+  },
+
+  doQuest(questId) {
+    const q = QUESTS.find(x => x.id === questId);
+    if (!q) return { ok: false, msg: 'Görev bulunamadı.' };
+
+    const p = this.player;
+    const now = Date.now();
+    const cooldownEnd = (p.questCooldowns || {})[questId] || 0;
+
+    if (now < cooldownEnd) {
+      const min = Math.ceil((cooldownEnd - now) / 60000);
+      return { ok: false, msg: `Görev bekleme süresinde. (${min} dk)` };
+    }
+    if (p.energy < q.energy) {
+      return { ok: false, msg: 'Yeterli enerji yok!' };
+    }
+
+    // Bonus hesapla
+    let goldBonus = 1;
+    if (p.inventory && p.inventory.includes('phone')) goldBonus = 1.1;
+
+    let cooldownMult = 1;
+    if (p.inventory && p.inventory.includes('bike') && questId === 'delivery') cooldownMult = 0.5;
+
+    p.energy -= q.energy;
+    const earned = Math.floor(q.gold * goldBonus);
+    p.gold += earned;
+    p.totalGold += earned;
+    p.questsDone = (p.questsDone || 0) + 1;
+    if (!p.questCooldowns) p.questCooldowns = {};
+    p.questCooldowns[questId] = now + Math.floor(q.cooldown * cooldownMult) * 1000;
+
+    // XP & Level
+    const oldLevel = p.level;
+    p.xp += q.xp;
+    p.totalXp += q.xp;
+
+    let leveled = false;
+    while (p.xp >= xpForLevel(p.level)) {
+      p.xp -= xpForLevel(p.level);
+      p.level++;
+      leveled = true;
+    }
+
+    this.save();
+
+    return {
+      ok: true,
+      earned,
+      xp: q.xp,
+      leveled,
+      newLevel: p.level,
+      msg: `+${earned} 💰  +${q.xp} XP kazandın!`
+    };
+  },
+
+  buyItem(itemId) {
+    const item = SHOP_ITEMS.find(x => x.id === itemId);
+    if (!item) return { ok: false, msg: 'Ürün bulunamadı.' };
+
+    const p = this.player;
+    if (p.gold < item.price) return { ok: false, msg: 'Yeterli altın yok!' };
+
+    if (!item.consumable && p.inventory && p.inventory.includes(itemId)) {
+      return { ok: false, msg: 'Bu ürüne zaten sahipsin.' };
+    }
+
+    p.gold -= item.price;
+
+    if (item.consumable) {
+      if (item.effect.energy) {
+        p.energy = Math.min(MAX_ENERGY, p.energy + item.effect.energy);
+      }
+    } else {
+      if (!p.inventory) p.inventory = [];
+      if (!p.inventory.includes(itemId)) p.inventory.push(itemId);
+    }
+
+    this.save();
+    return { ok: true, msg: `${item.name} satın alındı!` };
+  },
+
+  getEnergyRegenSeconds() {
+    const p = this.player;
+    if (p.energy >= MAX_ENERGY) return null;
+    const elapsed = Math.floor((Date.now() - p.lastEnergyTime) / 1000);
+    return ENERGY_REGEN_SEC - (elapsed % ENERGY_REGEN_SEC);
+  }
+};
+
+// === ui.js ===
+// js/ui.js — Arayüz render işlemleri
+
+let toastTimer = null;
+
+const UI = {
+
+  showToast(msg, duration = 2500) {
+    clearTimeout(toastTimer);
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.remove('hidden');
+    toastTimer = setTimeout(() => t.classList.add('hidden'), duration);
+  },
+
+  showLevelUp(level) {
+    const title = getTitle(level);
+    document.getElementById('lu-title').textContent = `SEVİYE ${level}!`;
+    document.getElementById('lu-sub').textContent = `"${title}" unvanını kazandın. Şehir senin!`;
+    document.getElementById('levelup-overlay').classList.remove('hidden');
+  },
+
+  closeLevelUp() {
+    document.getElementById('levelup-overlay').classList.add('hidden');
+  },
+
+  renderStats() {
+    const p = Game.player;
+    if (!p) return;
+    const initials = (Game.username || '?').slice(0, 2).toUpperCase();
+    document.getElementById('topbar-avatar').textContent = initials;
+    document.getElementById('bar-gold').textContent = p.gold;
+    document.getElementById('bar-energy').textContent = p.energy;
+    document.getElementById('bar-level').textContent = p.level;
+  },
+
+  renderDashboard() {
+    const p = Game.player;
+    if (!p) return;
+    document.getElementById('welcome-name').textContent = `Hoş geldin, ${Game.username}!`;
+    document.getElementById('welcome-sub').textContent = getTitle(p.level) + ' — Seviye ' + p.level;
+    document.getElementById('welcome-lvl').textContent = p.level;
+    document.getElementById('dash-gold').textContent = p.gold;
+    document.getElementById('dash-energy').textContent = `${p.energy}/${MAX_ENERGY}`;
+    document.getElementById('dash-xp').textContent = p.totalXp || 0;
+    document.getElementById('dash-quests').textContent = p.questsDone || 0;
+
+    const container = document.getElementById('quick-quests');
+    container.innerHTML = '';
+    QUESTS.slice(0, 3).forEach(q => {
+      container.appendChild(this._buildQuestCard(q, true));
+    });
+  },
+
+  renderProfile() {
+    const p = Game.player;
+    if (!p) return;
+    const initials = (Game.username || '?').slice(0, 2).toUpperCase();
+    const lvl = p.level;
+    const xp = p.xp;
+    const needed = xpForLevel(lvl);
+    const pct = Math.min(100, Math.round((xp / needed) * 100));
+
+    document.getElementById('profile-avatar').textContent = initials;
+    document.getElementById('profile-name').textContent = Game.username;
+    document.getElementById('profile-title').textContent = getTitle(lvl);
+    document.getElementById('xp-text').textContent = `${xp} / ${needed}`;
+    document.getElementById('xp-fill').style.width = pct + '%';
+    document.getElementById('stat-level').textContent = lvl;
+    document.getElementById('stat-gold-total').textContent = p.totalGold || 0;
+    document.getElementById('stat-energy').textContent = `${p.energy}/${MAX_ENERGY}`;
+    document.getElementById('stat-quests-done').textContent = p.questsDone || 0;
+    document.getElementById('stat-total-xp').textContent = p.totalXp || 0;
+    document.getElementById('stat-title').textContent = getTitle(lvl);
+  },
+
+  renderQuests() {
+    const container = document.getElementById('quest-list');
+    container.innerHTML = '';
+    QUESTS.forEach(q => {
+      container.appendChild(this._buildQuestCard(q, false));
+    });
+  },
+
+  _buildQuestCard(q, compact) {
+    const p = Game.player;
+    const now = Date.now();
+    const cooldownEnd = (p.questCooldowns || {})[q.id] || 0;
+    const onCooldown = now < cooldownEnd;
+    const hasEnergy = p.energy >= q.energy;
+    const minLeft = onCooldown ? Math.ceil((cooldownEnd - now) / 60000) : 0;
+
+    const card = document.createElement('div');
+    card.className = 'quest-card' + (onCooldown ? ' on-cooldown' : (!hasEnergy ? ' no-energy' : ''));
+
+    let btnLabel = 'Başlat';
+    if (onCooldown) btnLabel = `⏳ ${minLeft}dk`;
+    else if (!hasEnergy) btnLabel = '⚡ Az';
+
+    card.innerHTML = `
+      <div class="quest-icon">${q.icon}</div>
+      <div class="quest-info">
+        <div class="quest-name">${q.name}</div>
+        ${!compact ? `<div class="quest-desc">${q.desc}</div>` : ''}
+        <div class="quest-rewards">
+          <span class="badge badge-gold">+${q.gold} 💰</span>
+          <span class="badge badge-xp">+${q.xp} XP</span>
+          <span class="badge badge-en">-${q.energy} ⚡</span>
+        </div>
+      </div>
+      <button class="btn-quest" ${(onCooldown || !hasEnergy) ? 'disabled' : ''} data-quest="${q.id}">
+        ${btnLabel}
+      </button>
+    `;
+
+    card.querySelector('.btn-quest').addEventListener('click', () => {
+      const result = Game.doQuest(q.id);
+      if (!result.ok) { this.showToast(result.msg); return; }
+      this.renderStats();
+      this.renderDashboard();
+      this.renderQuests();
+      this.renderProfile();
+      if (result.leveled) this.showLevelUp(result.newLevel);
+      else this.showToast(result.msg);
+    });
+
+    return card;
+  },
+
+  renderShop() {
+    const p = Game.player;
+    if (!p) return;
+    if (!p.inventory) p.inventory = [];
+
+    const container = document.getElementById('shop-list');
+    const ownedContainer = document.getElementById('owned-list');
+    if (!container || !ownedContainer) return;
+
+    container.innerHTML = '';
+    ownedContainer.innerHTML = '';
+
+    SHOP_ITEMS.forEach(item => {
+      const owned = !item.consumable && p.inventory.includes(item.id);
+      const canAfford = p.gold >= item.price;
+
+      const card = document.createElement('div');
+      card.className = 'shop-card' + (owned ? ' owned' : '');
+      card.innerHTML = `
+        <div class="shop-icon">${item.icon}</div>
+        <div class="shop-name">${item.name}</div>
+        <div class="shop-desc">${item.desc}</div>
+        <div class="shop-price">💰 ${item.price} Altın</div>
+        <button class="btn-buy" ${(owned || !canAfford) ? 'disabled' : ''}>
+          ${owned ? 'Sahipsin ✓' : (!canAfford ? 'Yetersiz 💰' : 'Satın Al')}
+        </button>
+      `;
+
+      card.querySelector('.btn-buy').addEventListener('click', () => {
+        const result = Game.buyItem(item.id);
+        this.showToast(result.msg);
+        this.renderStats();
+        this.renderDashboard();
+        this.renderShop();
+      });
+
+      container.appendChild(card);
+    });
+
+    if (p.inventory.length === 0) {
+      ownedContainer.innerHTML = '<p style="color:var(--muted);font-size:0.82rem;padding:0.5rem 0;">Henüz hiçbir şeye sahip değilsin.</p>';
+    } else {
+      p.inventory.forEach(id => {
+        const item = SHOP_ITEMS.find(x => x.id === id);
+        if (!item) return;
+        const badge = document.createElement('div');
+        badge.className = 'owned-badge';
+        badge.textContent = `${item.icon} ${item.name}`;
+        ownedContainer.appendChild(badge);
+      });
+    }
+  },
+
+  switchPanel(panelId) {
+    document.querySelectorAll('.panel').forEach(p => {
+      p.style.display = 'none';
+    });
+    document.querySelectorAll('.nav-tab').forEach(t => {
+      t.classList.remove('active');
+    });
+
+    const panel = document.getElementById(panelId);
+    if (panel) panel.style.display = 'block';
+
+    const tab = document.querySelector(`[data-panel="${panelId}"]`);
+    if (tab) tab.classList.add('active');
+
+    if (panelId === 'panel-dashboard') this.renderDashboard();
+    if (panelId === 'panel-quests')    this.renderQuests();
+    if (panelId === 'panel-profile')   this.renderProfile();
+    if (panelId === 'panel-shop')      this.renderShop();
+  }
+};
+
+// === main.js ===
+// js/main.js — Uygulama başlangıcı ve event bağlantıları
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.add('hidden');
+    s.classList.remove('active');
+  });
+  const el = document.getElementById(id);
+  el.classList.remove('hidden');
+  el.classList.add('active');
+}
+
+function showError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+}
+
+function hideError() {
+  document.getElementById('auth-error').classList.add('hidden');
+}
+
+function launchGame(username) {
+  Storage.saveSession(username);
+  Game.load(username);
+  showScreen('game-screen');
+  UI.renderStats();
+  UI.renderDashboard();
+}
+
+function doLogout() {
+  Game.stopIntervals();
+  Storage.clearSession();
+  showScreen('auth-screen');
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+  hideError();
+}
+
+// ===== AUTH TAB SWITCHING =====
+document.querySelectorAll('.auth-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const t = tab.dataset.tab;
+    document.querySelectorAll('.auth-tab').forEach(b => b.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('login-form').classList.toggle('hidden', t !== 'login');
+    document.getElementById('register-form').classList.toggle('hidden', t !== 'register');
+    hideError();
+  });
+});
+
+// ===== LOGIN =====
+document.getElementById('btn-login').addEventListener('click', () => {
+  hideError();
+  const username = document.getElementById('login-user').value.trim();
+  const password = document.getElementById('login-pass').value;
+  if (!username || !password) return showError('Lütfen tüm alanları doldur.');
+  const result = Storage.login(username, password);
+  if (!result.ok) return showError(result.error);
+  launchGame(username);
+});
+
+// Enter key for login
+document.getElementById('login-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btn-login').click();
+});
+
+// ===== REGISTER =====
+document.getElementById('btn-register').addEventListener('click', () => {
+  hideError();
+  const username = document.getElementById('reg-user').value.trim();
+  const password = document.getElementById('reg-pass').value;
+  if (!username || !password) return showError('Lütfen tüm alanları doldur.');
+  const result = Storage.register(username, password);
+  if (!result.ok) return showError(result.error);
+  launchGame(username);
+});
+
+document.getElementById('reg-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btn-register').click();
+});
+
+// ===== LOGOUT =====
+document.getElementById('btn-logout').addEventListener('click', doLogout);
+
+// ===== NAV TABS =====
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    UI.switchPanel(tab.dataset.panel);
+  });
+});
+
+// ===== LEVEL UP CLOSE =====
+document.getElementById('btn-close-lu').addEventListener('click', () => UI.closeLevelUp());
+
+// ===== AUTO LOGIN (session restore) =====
+(function init() {
+  const session = Storage.getSession();
+  if (session && Storage.getPlayer(session)) {
+    launchGame(session);
+  } else {
+    showScreen('auth-screen');
+  }
+})();
+
+  </script>
+</body>
+</html>
