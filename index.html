@@ -3,213 +3,198 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kişisel Dijital Merkez</title>
+  <title>Kişisel Dijital Merkez Pro</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Inter', sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(99,102,241,0.35), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(168,85,247,0.25), transparent 35%),
+        radial-gradient(circle at top left, rgba(79,70,229,0.35), transparent 25%),
+        radial-gradient(circle at bottom right, rgba(168,85,247,0.25), transparent 30%),
+        radial-gradient(circle at center, rgba(14,165,233,0.15), transparent 35%),
         linear-gradient(135deg, #020617, #0f172a, #1e1b4b);
       min-height: 100vh;
-      overflow-x: hidden;
+      color: white;
     }
     .glass {
-      background: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
       backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
     }
-    .neon-border {
-      border: 1px solid rgba(99,102,241,0.35);
-      box-shadow: 0 0 25px rgba(99,102,241,0.18);
-    }
-    .hover-up:hover {
-      transform: translateY(-8px);
-      transition: all 0.35s ease;
-    }
-    .fade-in {
-      animation: fadeIn 0.8s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .sidebar-link:hover {
-      background: rgba(99,102,241,0.18);
+    .hidden-page { display: none; }
+    .active-page { display: block; }
+    .nav-btn:hover {
+      background: rgba(99,102,241,0.2);
       transform: translateX(6px);
+    }
+    .note-card:hover {
+      transform: translateY(-8px) scale(1.02);
     }
   </style>
 </head>
-<body class="text-white">
+<body>
 
 <!-- LOGIN -->
 <div id="loginPage" class="min-h-screen flex items-center justify-center p-6">
-  <div class="glass neon-border rounded-3xl w-full max-w-lg p-10 fade-in">
-    <div class="text-center mb-8">
-      <h1 class="text-5xl font-extrabold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Dijital Merkez</h1>
-      <p class="text-gray-300 mt-3">Hayatını, projelerini ve içeriklerini tek panelden yönet.</p>
-    </div>
-
-    <form onsubmit="enterDashboard(event)" class="space-y-5">
-      <input type="email" placeholder="Email adresin" class="w-full p-4 rounded-2xl bg-slate-900/60 border border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400">
-      <input type="password" placeholder="Şifren" class="w-full p-4 rounded-2xl bg-slate-900/60 border border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400">
-      <button class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:scale-105 transition-all p-4 rounded-2xl font-bold text-lg">Panele Giriş Yap</button>
+  <div class="glass rounded-3xl p-10 w-full max-w-lg text-center">
+    <h1 class="text-5xl font-extrabold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Dijital Merkez Pro</h1>
+    <p class="text-gray-300 mt-4">Kişisel yaşam, projeler, videolar ve içerik merkezi</p>
+    <form onsubmit="enterDashboard(event)" class="space-y-4 mt-8">
+      <input type="email" placeholder="Email" class="w-full p-4 rounded-2xl bg-slate-900/60 border border-indigo-500">
+      <input type="password" placeholder="Şifre" class="w-full p-4 rounded-2xl bg-slate-900/60 border border-indigo-500">
+      <button class="w-full p-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 font-bold text-lg">Panele Giriş</button>
     </form>
-
-    <div class="flex justify-between mt-5 text-sm text-gray-400">
-      <a href="#">Şifre Sıfırla</a>
-      <a href="#">Yeni Hesap Oluştur</a>
-    </div>
   </div>
 </div>
 
 <!-- DASHBOARD -->
-<div id="dashboard" class="hidden min-h-screen fade-in">
+<div id="dashboard" class="hidden">
   <div class="flex">
-
-    <!-- SIDEBAR -->
-    <aside class="w-80 min-h-screen glass p-8 hidden lg:flex flex-col">
-      <div class="mb-10">
-        <h2 class="text-3xl font-extrabold text-indigo-300">Koray Panel</h2>
-        <p class="text-gray-400 text-sm mt-2">Premium Creator Dashboard</p>
-      </div>
-
-      <nav class="space-y-3 flex-1">
-        <a class="sidebar-link transition-all block p-4 rounded-2xl" href="#">🏠 Ana Panel</a>
-        <a class="sidebar-link transition-all block p-4 rounded-2xl" href="#notes">📝 Günlükler</a>
-        <a class="sidebar-link transition-all block p-4 rounded-2xl" href="#media">🎬 Medya</a>
-        <a class="sidebar-link transition-all block p-4 rounded-2xl" href="#youtube">📺 YouTube</a>
-        <a class="sidebar-link transition-all block p-4 rounded-2xl" href="#projects">🎮 Projeler</a>
-        <a class="sidebar-link transition-all block p-4 rounded-2xl" href="#social">🌐 Sosyal</a>
-        <a class="sidebar-link transition-all block p-4 rounded-2xl" href="#goals">🎯 Hedefler</a>
+    <!-- Sidebar -->
+    <aside class="w-80 min-h-screen glass p-8 hidden lg:block">
+      <h2 class="text-3xl font-extrabold mb-8">Koray Hub</h2>
+      <nav class="space-y-3">
+        <button onclick="showPage('home')" class="nav-btn w-full text-left p-4 rounded-2xl transition-all">🏠 Ana Panel</button>
+        <button onclick="showPage('notes')" class="nav-btn w-full text-left p-4 rounded-2xl transition-all">📝 Profesyonel Notlar</button>
+        <button onclick="showPage('videos')" class="nav-btn w-full text-left p-4 rounded-2xl transition-all">🎥 Günlük Videolar</button>
+        <button onclick="showPage('youtube')" class="nav-btn w-full text-left p-4 rounded-2xl transition-all">📺 YouTube Studio</button>
+        <button onclick="showPage('projects')" class="nav-btn w-full text-left p-4 rounded-2xl transition-all">🎮 Projeler</button>
+        <button onclick="showPage('social')" class="nav-btn w-full text-left p-4 rounded-2xl transition-all">🌐 Sosyal Merkez</button>
       </nav>
-
-      <div class="glass rounded-3xl p-5 mt-8">
-        <p class="text-sm text-gray-300">Aktif Gelişim</p>
-        <h3 class="text-xl font-bold mt-2">Seviye: Creator Elite</h3>
-      </div>
     </aside>
 
-    <!-- MAIN -->
-    <main class="flex-1 p-6 lg:p-10">
-      <!-- TOPBAR -->
-      <header class="flex flex-col md:flex-row justify-between items-center gap-4 mb-10">
-        <div>
-          <h1 class="text-5xl font-extrabold">Hoş Geldin 👑</h1>
-          <p class="text-gray-400 mt-2">Dijital yaşam kontrol merkezin hazır.</p>
-        </div>
-        <div class="glass rounded-3xl px-6 py-4 flex items-center gap-4">
-          <div class="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"></div>
-          <div>
-            <p class="font-bold">Koray</p>
-            <p class="text-sm text-gray-400">İçerik Üretici</p>
-          </div>
-        </div>
-      </header>
-
-      <!-- STATS -->
-      <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div class="glass rounded-3xl p-6 hover-up">
-          <p class="text-gray-400">Toplam Günlük</p>
-          <h3 class="text-5xl font-extrabold mt-3">128</h3>
-        </div>
-        <div class="glass rounded-3xl p-6 hover-up">
-          <p class="text-gray-400">Yüklenen Medya</p>
-          <h3 class="text-5xl font-extrabold mt-3">342</h3>
-        </div>
-        <div class="glass rounded-3xl p-6 hover-up">
-          <p class="text-gray-400">Aktif Proje</p>
-          <h3 class="text-5xl font-extrabold mt-3">7</h3>
+    <!-- Main -->
+    <main class="flex-1 p-8">
+      <!-- HOME -->
+      <section id="home" class="active-page">
+        <h1 class="text-5xl font-extrabold mb-4">Hoş Geldin 👑</h1>
+        <p class="text-gray-300 mb-10">Tüm dijital yaşamını burada profesyonelce yönet.</p>
+        <div class="grid md:grid-cols-4 gap-6">
+          <div class="glass p-6 rounded-3xl"><h3>Toplam Not</h3><p class="text-4xl font-bold mt-3">128</p></div>
+          <div class="glass p-6 rounded-3xl"><h3>Videolar</h3><p class="text-4xl font-bold mt-3">56</p></div>
+          <div class="glass p-6 rounded-3xl"><h3>Projeler</h3><p class="text-4xl font-bold mt-3">12</p></div>
+          <div class="glass p-6 rounded-3xl"><h3>YouTube İçerik</h3><p class="text-4xl font-bold mt-3">34</p></div>
         </div>
       </section>
 
       <!-- NOTES -->
-      <section id="notes" class="mb-14">
-        <h2 class="text-3xl font-bold mb-6">📝 Günlük Notlar</h2>
-        <div class="glass rounded-3xl p-6">
-          <textarea placeholder="Bugün neler yaptın?" class="w-full h-40 p-5 rounded-2xl bg-slate-900/50 border border-indigo-500"></textarea>
-          <button class="mt-5 bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-3 rounded-2xl font-bold">Kaydet</button>
+      <section id="notes" class="hidden-page">
+        <h2 class="text-4xl font-bold mb-6">📝 Profesyonel Not Sistemi</h2>
+        <div class="glass p-6 rounded-3xl mb-8">
+          <textarea id="noteInput" placeholder="Yeni not ekle..." class="w-full h-32 p-4 rounded-2xl bg-slate-900/50 border border-indigo-500"></textarea>
+          <button onclick="addNote()" class="mt-4 px-6 py-3 rounded-2xl bg-indigo-600 font-bold">Not Kaydet</button>
         </div>
+        <div id="notesContainer" class="grid md:grid-cols-3 gap-6"></div>
       </section>
 
-      <!-- MEDIA -->
-      <section id="media" class="mb-14">
-        <h2 class="text-3xl font-bold mb-6">🎬 Medya Galerisi</h2>
-        <div class="glass rounded-3xl p-6">
-          <input type="file" class="mb-6">
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
-            <div class="glass h-36 rounded-2xl flex items-center justify-center hover-up">Fotoğraflar</div>
-            <div class="glass h-36 rounded-2xl flex items-center justify-center hover-up">Klipler</div>
-            <div class="glass h-36 rounded-2xl flex items-center justify-center hover-up">Videolar</div>
-            <div class="glass h-36 rounded-2xl flex items-center justify-center hover-up">Projeler</div>
-          </div>
+      <!-- VIDEOS -->
+      <section id="videos" class="hidden-page">
+        <h2 class="text-4xl font-bold mb-6">🎥 Günlük Video Alanı</h2>
+        <div class="glass p-6 rounded-3xl mb-8">
+          <input type="file" accept="video/*" class="mb-4">
+          <p class="text-gray-300">Günlük videolarını yükle, kategorilere ayır ve arşivle.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="glass h-52 rounded-3xl flex items-center justify-center">Video Günlük #1</div>
+          <div class="glass h-52 rounded-3xl flex items-center justify-center">Video Günlük #2</div>
+          <div class="glass h-52 rounded-3xl flex items-center justify-center">Video Günlük #3</div>
         </div>
       </section>
 
       <!-- YOUTUBE -->
-      <section id="youtube" class="mb-14">
-        <h2 class="text-3xl font-bold mb-6">📺 YouTube Entegrasyonu</h2>
-        <div class="glass rounded-3xl p-6 space-y-5">
-          <input type="text" placeholder="YouTube kanal linkin" class="w-full p-4 rounded-2xl bg-slate-900/50 border border-red-500">
-          <iframe class="w-full rounded-3xl h-80" src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+      <section id="youtube" class="hidden-page">
+        <h2 class="text-4xl font-bold mb-6">📺 YouTube Studio Pro</h2>
+        <div class="grid lg:grid-cols-2 gap-8">
+          <div class="glass p-6 rounded-3xl">
+            <input type="text" placeholder="YouTube kanal linki" class="w-full p-4 rounded-2xl bg-slate-900/50 border border-red-500 mb-4">
+            <iframe class="w-full h-72 rounded-3xl" src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
+          </div>
+          <div class="glass p-6 rounded-3xl">
+            <h3 class="text-2xl font-bold mb-4">Kanal Yönetimi</h3>
+            <ul class="space-y-3 text-gray-300">
+              <li>📈 Kanal büyüme takibi</li>
+              <li>🎬 Son yüklenen videolar</li>
+              <li>📅 İçerik planlama</li>
+              <li>🚀 Video stratejileri</li>
+            </ul>
+          </div>
         </div>
       </section>
 
       <!-- PROJECTS -->
-      <section id="projects" class="mb-14">
-        <h2 class="text-3xl font-bold mb-6">🎮 Oyun Projeleri</h2>
-        <div class="grid md:grid-cols-2 gap-6">
-          <div class="glass rounded-3xl p-6 hover-up">
+      <section id="projects" class="hidden-page">
+        <h2 class="text-4xl font-bold mb-6">🎮 Gelişmiş Proje Merkezi</h2>
+        <div class="grid lg:grid-cols-2 gap-8">
+          <div class="glass p-6 rounded-3xl">
             <h3 class="text-2xl font-bold">Ben 10: Sonsuz Evren</h3>
-            <p class="text-gray-400 mt-3">Animasyon, karakter tasarım, senaryo ve fragman üretimi.</p>
+            <p class="text-gray-300 mt-3">Karakter tasarımı, fragman, senaryo, Blender modelleri, bölüm sistemi.</p>
+            <div class="mt-4 text-indigo-300">Durum: %78 Tamamlandı</div>
           </div>
-          <div class="glass rounded-3xl p-6 hover-up">
-            <h3 class="text-2xl font-bold">Roblox Yaşam Oyunu</h3>
-            <p class="text-gray-400 mt-3">Meslek sistemi, ekonomi, araçlar ve roleplay dünya tasarımı.</p>
+          <div class="glass p-6 rounded-3xl">
+            <h3 class="text-2xl font-bold">Roblox Life RP</h3>
+            <p class="text-gray-300 mt-3">Meslekler, araç sistemi, ekonomi, premium özellikler.</p>
+            <div class="mt-4 text-purple-300">Durum: %61 Tamamlandı</div>
+          </div>
+          <div class="glass p-6 rounded-3xl">
+            <h3 class="text-2xl font-bold">FiveM Sistemleri</h3>
+            <p class="text-gray-300 mt-3">Yönetim paneli, rol sistemleri, ekonomi modülleri.</p>
+          </div>
+          <div class="glass p-6 rounded-3xl">
+            <h3 class="text-2xl font-bold">İçerik Üretim Merkezi</h3>
+            <p class="text-gray-300 mt-3">YouTube, sosyal medya, video planlama ve büyüme stratejileri.</p>
           </div>
         </div>
       </section>
 
       <!-- SOCIAL -->
-      <section id="social" class="mb-14">
-        <h2 class="text-3xl font-bold mb-6">🌐 Sosyal Link Merkezi</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
-          <button class="glass p-5 rounded-2xl hover-up">YouTube</button>
-          <button class="glass p-5 rounded-2xl hover-up">Instagram</button>
-          <button class="glass p-5 rounded-2xl hover-up">TikTok</button>
-          <button class="glass p-5 rounded-2xl hover-up">Discord</button>
+      <section id="social" class="hidden-page">
+        <h2 class="text-4xl font-bold mb-6">🌐 Sosyal Merkez</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div class="glass p-6 rounded-3xl text-center">YouTube</div>
+          <div class="glass p-6 rounded-3xl text-center">Instagram</div>
+          <div class="glass p-6 rounded-3xl text-center">TikTok</div>
+          <div class="glass p-6 rounded-3xl text-center">Discord</div>
         </div>
       </section>
 
-      <!-- GOALS -->
-      <section id="goals">
-        <h2 class="text-3xl font-bold mb-6">🎯 Hedefler</h2>
-        <div class="glass rounded-3xl p-6">
-          <ul class="space-y-4 text-lg">
-            <li>🔥 Ben 10 fragmanını tamamla</li>
-            <li>🚗 Roblox haritasını geliştir</li>
-            <li>📈 YouTube kanalını büyüt</li>
-            <li>💎 Premium içerik merkezi oluştur</li>
-          </ul>
-        </div>
-      </section>
     </main>
   </div>
 </div>
 
 <script>
-  function enterDashboard(e) {
-    e.preventDefault();
-    document.getElementById('loginPage').classList.add('hidden');
-    document.getElementById('dashboard').classList.remove('hidden');
-  }
+function enterDashboard(e) {
+  e.preventDefault();
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+}
+
+function showPage(pageId) {
+  document.querySelectorAll('main section').forEach(section => {
+    section.classList.remove('active-page');
+    section.classList.add('hidden-page');
+  });
+  document.getElementById(pageId).classList.remove('hidden-page');
+  document.getElementById(pageId).classList.add('active-page');
+}
+
+function addNote() {
+  const input = document.getElementById('noteInput');
+  const container = document.getElementById('notesContainer');
+  if(input.value.trim() === '') return;
+
+  const note = document.createElement('div');
+  note.className = 'glass p-5 rounded-3xl note-card transition-all';
+  note.innerHTML = `
+    <h3 class="font-bold text-xl mb-3">📌 Not</h3>
+    <p class="text-gray-300">${input.value}</p>
+    <button onclick="this.parentElement.remove()" class="mt-4 text-red-400">Sil</button>
+  `;
+
+  container.prepend(note);
+  input.value = '';
+}
 </script>
 
 </body>
